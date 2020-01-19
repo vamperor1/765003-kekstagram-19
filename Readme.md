@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Сергей Ситдинов](https://up.htmlacademy.ru/javascript/19/user/765003).
-* Наставник: `Неизвестно`.
+* Наставник: [Кексобот].
 
 ---
 
