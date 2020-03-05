@@ -21,7 +21,7 @@
   };
 
   var renderPhotoAttributes = function () {
-    bigPicture.classList.remove('hidden');
+    // bigPicture.classList.remove('hidden');
     bigPicture.querySelector('.big-picture__img img').setAttribute('src', window.data.usersPhotosData[0].url);
     bigPicture.querySelector('.likes-count').textContent = window.data.usersPhotosData[0].likes;
     bigPicture.querySelector('.comments-count').textContent = window.data.usersPhotosData[0].comments.length;
@@ -34,6 +34,6 @@
 
   bigPicture.querySelector('.social__comment-count').classList.add('hidden');
   bigPicture.querySelector('.comments-loader').classList.add('hidden');
-  document.querySelector('body').classList.add('modal-open');
+  // document.querySelector('body').classList.add('modal-open');
 
 })();
