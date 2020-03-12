@@ -51,6 +51,7 @@
       userPhoto.querySelector('.picture__img').setAttribute('src', window.data.usersPhotosData[i].url);
       userPhoto.querySelector('.picture__likes').textContent = window.data.usersPhotosData[i].likes;
       userPhoto.querySelector('.picture__comments').textContent = window.data.usersPhotosData[i].comments.length;
+      userPhoto.setAttribute('data-id', i);
 
       fragment.appendChild(userPhoto);
     }
