@@ -5,6 +5,7 @@
   var photoUpload = document.querySelector('#upload-file');
   var form = document.querySelector('.img-upload__overlay');
   var formCloseButton = form.querySelector('#upload-cancel');
+  var body = document.querySelector('body');
 
   // Изменение масштаба фото
   var SCALE_STEP = 25;
@@ -26,7 +27,7 @@
 
   var onPhotoUploadChange = function () {
     form.classList.remove('hidden');
-    window.util.BODY.classList.add('modal-open');
+    body.classList.add('modal-open');
 
     document.addEventListener('keydown', onFormEscPress);
     formCloseButton.addEventListener('click', onFormCloseButtonClick);
@@ -39,7 +40,7 @@
 
   var closeForm = function () {
     form.classList.add('hidden');
-    window.util.BODY.classList.remove('modal-open');
+    body.classList.remove('modal-open');
     photoUpload.value = '';
     scaleIndex = SCALE_INDEX_DEFAULT;
     previewImage.removeAttribute('style');
