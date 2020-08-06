@@ -74,8 +74,8 @@
 
     picturesContainer.addEventListener('click', onPictureClick);
 
-    bigPicture.querySelector('.social__comment-count').classList.add('hidden');
-    bigPicture.querySelector('.comments-loader').classList.add('hidden');
+    // bigPicture.querySelector('.social__comment-count').classList.add('hidden');
+    // bigPicture.querySelector('.comments-loader').classList.add('hidden');
 
   };
   // document.querySelector('body').classList.add('modal-open');

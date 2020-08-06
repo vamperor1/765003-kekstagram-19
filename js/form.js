@@ -1,12 +1,6 @@
 'use strict';
 
 (function () {
-  // Открытие/закрытие формы редактирования фото
-  var photoUpload = document.querySelector('#upload-file');
-  var form = document.querySelector('.img-upload__overlay');
-  var formCloseButton = form.querySelector('#upload-cancel');
-  var body = document.querySelector('body');
-
   // Изменение масштаба фото
   var SCALE_STEP = 25;
   var SCAL_MAX = 100;
@@ -14,20 +8,8 @@
   var COMMENT_MAX_LENGTH = 140;
   var SCALE_INDEX_DEFAULT = 100;
   var PERCENT_DIVISOR = 100;
-  var scaleIndex = SCALE_INDEX_DEFAULT;
-  var scaleMinus = form.querySelector('.scale__control--smaller');
-  var scalePlus = form.querySelector('.scale__control--bigger');
-  var scaleValue = form.querySelector('.scale__control--value');
-  var previewImage = form.querySelector('.img-upload__preview img');
-  var effectsList = form.querySelector('.effects__list');
 
   // Ползунок
-  var effectLevelHandler = form.querySelector('.effect-level__pin');
-  var effectLevelDepth = form.querySelector('.effect-level__depth');
-  var effectLevelLine = form.querySelector('.effect-level__line');
-  var effectLevelBlock = form.querySelector('.effect-level');
-  var effectLevelInput = form.querySelector('.effect-level__value');
-
   var EFFECT_LEVEL_DEFAULT = 100;
   var EFFECT_LEVEL_RANGES = {
     CHROME: {
@@ -52,13 +34,44 @@
     },
   };
 
+  // Открытие/закрытие формы редактирования фото
+  var photoUpload = document.querySelector('#upload-file');
+  var formOverlay = document.querySelector('.img-upload__overlay');
+  var form = document.querySelector('.img-upload__form');
+  var formCloseButton = formOverlay.querySelector('#upload-cancel');
+  var body = document.querySelector('body');
+
+  // Изменение масштаба фото
+  var scaleIndex = SCALE_INDEX_DEFAULT;
+  var scaleMinus = formOverlay.querySelector('.scale__control--smaller');
+  var scalePlus = formOverlay.querySelector('.scale__control--bigger');
+  var scaleValue = formOverlay.querySelector('.scale__control--value');
+  var previewImage = formOverlay.querySelector('.img-upload__preview img');
+  var effectsList = formOverlay.querySelector('.effects__list');
+
+  // Ползунок
+  var effectLevelHandler = formOverlay.querySelector('.effect-level__pin');
+  var effectLevelDepth = formOverlay.querySelector('.effect-level__depth');
+  var effectLevelLine = formOverlay.querySelector('.effect-level__line');
+  var effectLevelBlock = formOverlay.querySelector('.effect-level');
+  var effectLevelInput = formOverlay.querySelector('.effect-level__value');
+
   // Валидация хэштегов и комментария
-  var commentInput = form.querySelector('.text__description');
-  var tagsInput = form.querySelector('.text__hashtags');
+  var commentInput = formOverlay.querySelector('.text__description');
+  var tagsInput = formOverlay.querySelector('.text__hashtags');
   var TAGS_PATTERN = /[^#a-zA-Zа-яА-Я0-9\s]/g;
 
+  // Загрузка изображения
+  var succesModalTemplate = document.querySelector('#success').content.querySelector('.success');
+  var errorModalTemplate = document.querySelector('#error').content.querySelector('.error');
+  var succesModal = succesModalTemplate.cloneNode(true);
+  var errorModal = errorModalTemplate.cloneNode(true);
+  var succesModalWindow = succesModal.querySelector('.success__inner');
+  var errorModalWindow = errorModal.querySelector('.error__inner');
+  var mainPageSection = document.querySelector('main');
+
   var onPhotoUploadChange = function () {
-    form.classList.remove('hidden');
+    formOverlay.classList.remove('hidden');
     body.classList.add('modal-open');
     effectLevelBlock.classList.add('hidden');
 
@@ -73,7 +86,7 @@
   };
 
   var closeForm = function () {
-    form.classList.add('hidden');
+    formOverlay.classList.add('hidden');
     body.classList.remove('modal-open');
     photoUpload.value = '';
     scaleIndex = SCALE_INDEX_DEFAULT;
@@ -93,6 +106,7 @@
   var onFormEscPress = function (evt) {
     if (evt.key === window.util.ESC_KEY && !(evt.target === tagsInput || evt.target === commentInput)) {
       closeForm();
+      closeModalMsg();
     }
   };
 
@@ -271,4 +285,83 @@
 
   photoUpload.addEventListener('change', onPhotoUploadChange);
 
+  var renderModalMsg = function (succes) {
+    if (succes) {
+      mainPageSection.append(succesModal);
+    } else {
+      mainPageSection.append(errorModal);
+    }
+    document.addEventListener('keydown', onFormEscPress);
+    document.addEventListener('click', onPageClick);
+  };
+
+  var onSucces = function () {
+    closeForm();
+    renderModalMsg(true);
+  };
+
+  var onError = function () {
+    closeForm();
+    renderModalMsg(false);
+  };
+
+  var closeModalMsg = function () {
+    succesModal.remove();
+    errorModal.remove();
+    document.removeEventListener('keydown', onFormEscPress);
+    document.removeEventListener('click', onPageClick);
+  };
+
+  var onPageClick = function (evt) {
+    if (evt.target !== succesModalWindow || evt.target === errorModalWindow) {
+      closeModalMsg();
+    }
+  };
+
+  form.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    window.upload(new FormData(form), onSucces, onError);
+  });
+
+  /*
+  var renderSuccesModal = function () {
+    mainPageSection.append(succesModal);
+    document.addEventListener('keydown', onModalEscPress);
+    document.addEventListener('click', onPageClick);
+  };
+
+  var onModalEscPress = function (evt) {
+    if (evt.key === window.util.ESC_KEY) {
+      closeSuccesModal();
+    }
+  };
+
+  var onPageClick = function (evt) {
+    var succesModalCloseBtn = mainPageSection.querySelector('.success__button');
+    if (evt.target === succesModal || evt.target === succesModalCloseBtn) {
+      closeSuccesModal();
+    }
+    console.log(evt.target);
+  };
+
+  var closeSuccesModal = function () {
+    succesModal.remove();
+    document.removeEventListener('keydown', onModalEscPress);
+    document.removeEventListener('click', onPageClick);
+  };
+
+  var onSucces = function () {
+    closeForm();
+    renderSuccesModal();
+  };
+
+  var onError = function () {
+    console.log('onError');
+  };
+
+  form.addEventListener('submit', function (evt) {
+    window.upload(new FormData(form), onSucces, onError);
+    evt.preventDefault();
+  });
+  */
 })();
